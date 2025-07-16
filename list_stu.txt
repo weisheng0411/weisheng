@@ -1,5 +1,0 @@
-Name,IC,Email,Contact Number,Address,Education Level,Subjects,Month of Enrollment
-kai,123,313,133,131,Form 1,BM BC None,May
-14,124,1341,3131,313,Form 1,BC BM BC,February
-yina,31414,1414,242,rjrhj,Form 1,BM BC BC,January
-weisheng,131,313,13313131,313,Form 2,BC BM BM,February
