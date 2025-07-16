@@ -1,6 +1,8 @@
 //liankai is gay
 //....
 //lian kai 
+gegeggegege
+
 package multipageapp;
 rndfbnfpncx;ln xnx;bnx;lb
 import java.awt.*;
