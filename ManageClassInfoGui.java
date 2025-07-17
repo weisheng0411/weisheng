@@ -1,7 +1,10 @@
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -351,8 +354,8 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try{
-            FileInputStream file = new FileInputStream("ClassInfo.txr");
-            ObjectInputStream input = new ObjectInputStream(file);
+            FileInputStream file = new FileInputStream("file.bin");
+            ObjectInputStream input =  new ObjectInputStream(file);
             
             Vector<Vector> tableData = (Vector<Vector>)input.readObject();
             
@@ -360,12 +363,11 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             file.close();
             
             DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
-            for (int i =0; i <tableData.size(); i++){
+            for(int i = 0; i<tableData.size(); i++){
                 Vector row = tableData.get(i);
-                model.addRow(new Object[]{row.get(0),row.get(1),row.get(2),row.get(3),row.get(4),row.get(5)});
+                model.addRow(new Object[]{row.get(0),row.get(1),row.get(2),row.get(3),row.get(4),row.get(4),row.get(6)});
             }
-
-        }catch (Exception ex) {
+        }catch(Exception ex){
             ex.printStackTrace();
         }
     }//GEN-LAST:event_formWindowOpened
@@ -389,7 +391,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
         String Fee = tfFee.getText();
         String TutorName = tfTutorName.getText();
 
-        if(ClassID.isEmpty() ||  CourseDate.isEmpty() || CourseTime.isEmpty() || Location.isEmpty() || Fee.isEmpty() || TutorName.isEmpty()){
+        if(ClassID.isEmpty() || CourseDate.isEmpty() || CourseTime.isEmpty() || Location.isEmpty() || Fee.isEmpty() || TutorName.isEmpty()){
             JOptionPane.showMessageDialog(this,
                 "Please enter all fields",
                 "Try again",
@@ -401,10 +403,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
             model.addRow(new Object[]{ClassID, Subject, CourseDate, CourseTime, Location, Fee, TutorName});
 
-            try (BufferedWriter bw = new BufferedWriter (new FileWriter("ClassInfo.txt"))){
-                bw.write("Class ID, Subject, Course Date,Course Time, Location, Fee,Tutor Name");
-                bw.newLine();
-
+            try (BufferedWriter bw = new BufferedWriter (new FileWriter("ClassInfo.txt"))){                        
                 for (int i = 0;i < model.getRowCount(); i++){
                     for (int j = 0; j< model.getColumnCount(); j++){
                         Object value = model.getValueAt(i,j);
@@ -481,29 +480,6 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String []args) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ManageClassInfoGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ManageClassInfoGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ManageClassInfoGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ManageClassInfoGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
