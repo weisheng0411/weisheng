@@ -1,3 +1,0 @@
-Name,IC,Email,Contact Number,Address,Education Level,Subjects,Month of Enrollment
-kai,123412341234,kai@gmail.com,0123456789,KL,Form 2,BM BC None,January
-ler,123456789012,ler@gmail.com,9876543210,Johor,Form 6,BM BC None,April
