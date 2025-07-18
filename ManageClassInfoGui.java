@@ -50,8 +50,6 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
         javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         javax.swing.JPanel jPanel2 = new javax.swing.JPanel();
-        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
-        tfClassId = new javax.swing.JTextField();
         javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
         tfCourseDate = new javax.swing.JTextField();
@@ -93,14 +91,20 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "New Class", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
         jPanel2.setOpaque(false);
 
-        jLabel2.setText("Class ID");
-
+        jLabel3.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         jLabel3.setText("Subject");
 
+        jLabel4.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         jLabel4.setText("Course Date");
 
         tfCourseDate.setToolTipText("");
+        tfCourseDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfCourseDateActionPerformed(evt);
+            }
+        });
 
+        jLabel5.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         jLabel5.setText("Course Time");
 
         tfCourseTime.addActionListener(new java.awt.event.ActionListener() {
@@ -109,9 +113,10 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         jLabel6.setText("Location");
 
-        btnADD.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnADD.setFont(new java.awt.Font("Segoe Print", 1, 14)); // NOI18N
         btnADD.setText("ADD");
         btnADD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -119,7 +124,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             }
         });
 
-        btnClear.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnClear.setFont(new java.awt.Font("Segoe Print", 1, 14)); // NOI18N
         btnClear.setText("Clear");
         btnClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -127,6 +132,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setFont(new java.awt.Font("Segoe Script", 1, 12)); // NOI18N
         jLabel7.setText("Fee");
 
         tfFee.addActionListener(new java.awt.event.ActionListener() {
@@ -135,6 +141,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setFont(new java.awt.Font("Segoe Print", 3, 12)); // NOI18N
         jLabel8.setText("Tutor Name");
 
         tfTutorName.addActionListener(new java.awt.event.ActionListener() {
@@ -175,14 +182,12 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
                             .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tfClassId)
                             .addComponent(tfCourseDate)
                             .addComponent(tfCourseTime)
-                            .addComponent(tfFee)
-                            .addComponent(tfTutorName)
                             .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(comsubject, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(comsubject, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tfTutorName)
+                            .addComponent(tfFee))))
                 .addContainerGap())
         );
 
@@ -192,22 +197,18 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tfClassId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comsubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfCourseDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfCourseTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tfLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -217,16 +218,16 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
                 .addComponent(tfFee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tfTutorName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 261, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnADD)
                     .addComponent(btnClear))
                 .addGap(16, 16, 16))
         );
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton3.setFont(new java.awt.Font("Segoe Print", 1, 14)); // NOI18N
         jButton3.setText("Delete");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,6 +245,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tableClassInfo);
 
+        jButton1.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         jButton1.setText("Back");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -257,6 +259,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             }
         });
 
+        btnSearch.setFont(new java.awt.Font("Segoe Print", 1, 12)); // NOI18N
         btnSearch.setText("Search");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -307,7 +310,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -337,11 +340,35 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
             DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
             model.removeRow(row);
         }
+        try{
+            BufferedWriter bw = new BufferedWriter(new FileWriter("ClassInfo.txt"));
+            DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
+
+            for(int i = 0; i< model.getRowCount(); i++){
+                StringBuilder sb = new StringBuilder();
+                for(int j = 0; j<model.getColumnCount(); j++){
+                    Object cell = model.getValueAt(i, j);
+                    sb.append(cell != null ? cell.toString().trim(): ""); 
+                    if(j< model.getColumnCount() - 1){
+                        sb.append(",");
+                }
+
+                }
+                bw.write(sb.toString());
+                bw.newLine();
+            }
+
+        bw.close();
+        System.out.println("Data saved to ClassInfo.txt on Window close");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         try{
-             BufferedWriter bw = new BufferedWriter(new FileWriter("ClassInfo.txt",false));
+            BufferedWriter bw = new BufferedWriter(new FileWriter("ClassInfo.txt"));
             DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
             
             for(int i = 0; i< model.getRowCount(); i++){
@@ -367,36 +394,30 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-            try{
-            BufferedReader br = new BufferedReader(new FileReader("ClassInfo.txt"));
-            DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
+        try{
+        BufferedReader br = new BufferedReader(new FileReader("ClassInfo.txt"));
+        DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
+        model.setRowCount(0);
+
+        String line;
+        while((line = br.readLine()) != null){
+            String[] rowData = line.split(",");
+            Vector <Object> row = new Vector<>();
             
-            String line;
-            while((line = br.readLine()) != null){
-                String[] rowData = line.split(",");
-                
-                boolean isDuplicate =false;
-                for(int i = 0; i< model.getRowCount(); i++){
-                    String exsitingClassID = model.getValueAt(i, 0).toString().trim();
-                    if(exsitingClassID.equals(rowData[0].trim())){
-                        isDuplicate = true;
-                        break;
-                    }
-                }
-                
-                if(isDuplicate){
-                    model.addRow(rowData);
-                }
+            for(int i = 0; i< rowData.length; i++){
+                row.add(rowData[i]);
             }
-            
+            model.addRow(row);
+        }
+
             br.close();
         }catch(Exception ex){
-            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this,"Error: "+ ex.getMessage());
         }
     }//GEN-LAST:event_formWindowOpened
 
     private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
-        tfClassId.setText("");
+
         
         tfCourseDate.setText("");
         tfCourseTime.setText("");
@@ -514,6 +535,10 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
     private void comsubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comsubjectActionPerformed
 
     }//GEN-LAST:event_comsubjectActionPerformed
+
+    private void tfCourseDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfCourseDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfCourseDateActionPerformed
     
     /**
      * @param args the command line arguments
@@ -540,7 +565,6 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableClassInfo;
-    private javax.swing.JTextField tfClassId;
     private javax.swing.JTextField tfCourseDate;
     private javax.swing.JTextField tfCourseTime;
     private javax.swing.JTextField tfFee;
