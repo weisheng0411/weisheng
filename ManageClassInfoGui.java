@@ -519,7 +519,11 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String []args) {
-        /* Create and display the form */
+         
+        System.out.println("Current directory: " + System.getProperty("user.dir"));
+        System.out.println("Saving to: " + new File("ClassInfo.txt").getAbsolutePath());
+
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new ManageClassInfoGui().setVisible(true);
