@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
@@ -30,8 +32,12 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
      */
     public ManageClassInfoGui() {
         initComponents();
+        loadClassInfoFile();
+        
     }
-
+    private void loadClassInfoFile(){
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -334,39 +340,56 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
-        Vector<Vector> tableData = model.getDataVector();
-        
-        
         try{
-            FileOutputStream file = new FileOutputStream("file.bin");
-            ObjectOutputStream output = new ObjectOutputStream(file);
+             BufferedWriter bw = new BufferedWriter(new FileWriter("ClassInfo.txt",false));
+            DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
             
-            output.writeObject(tableData);
+            for(int i = 0; i< model.getRowCount(); i++){
+                StringBuilder sb = new StringBuilder();
+                for(int j = 0; j<model.getColumnCount(); j++){
+                    Object cell = model.getValueAt(i, j);
+                    sb.append(cell != null ? cell.toString().trim(): ""); 
+                    if(j< model.getColumnCount() - 1){
+                        sb.append(",");
+                }
+                
+                }
+                bw.write(sb.toString());
+                bw.newLine();
+            }
             
-            output.close();
-            file.close();
-            
-        }catch (Exception ex) {
-            ex.printStackTrace();
-        }
+            bw.close();
+            System.out.println("Data saved to ClassInfo.txt on Window close");
+        }catch(Exception e){
+            e.printStackTrace();
+        }   
+  
     }//GEN-LAST:event_formWindowClosing
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        try{
-            FileInputStream file = new FileInputStream("file.bin");
-            ObjectInputStream input =  new ObjectInputStream(file);
-            
-            Vector<Vector> tableData = (Vector<Vector>)input.readObject();
-            
-            input.close();
-            file.close();
-            
+            try{
+            BufferedReader br = new BufferedReader(new FileReader("ClassInfo.txt"));
             DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
-            for(int i = 0; i<tableData.size(); i++){
-                Vector row = tableData.get(i);
-                model.addRow(new Object[]{row.get(0),row.get(1),row.get(2),row.get(3),row.get(4),row.get(4),row.get(6)});
+            
+            String line;
+            while((line = br.readLine()) != null){
+                String[] rowData = line.split(",");
+                
+                boolean isDuplicate =false;
+                for(int i = 0; i< model.getRowCount(); i++){
+                    String exsitingClassID = model.getValueAt(i, 0).toString().trim();
+                    if(exsitingClassID.equals(rowData[0].trim())){
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+                
+                if(isDuplicate){
+                    model.addRow(rowData);
+                }
             }
+            
+            br.close();
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -383,51 +406,79 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnADDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnADDActionPerformed
-        String ClassID = tfClassId.getText();
-        String Subject = comsubject.getSelectedItem().toString();
-        String CourseDate = tfCourseDate.getText();
-        String CourseTime = tfCourseTime.getText();
-        String Location = tfLocation.getText();
-        String Fee = tfFee.getText();
-        String TutorName = tfTutorName.getText();
+    String subject = comsubject.getSelectedItem().toString().trim();
+    String courseDate = tfCourseDate.getText().trim();
+    String courseTime = tfCourseTime.getText().trim();
+    String location = tfLocation.getText().trim();
+    String fee = tfFee.getText().trim();
+    String tutorName = tfTutorName.getText().trim();
 
-        if(ClassID.isEmpty() || CourseDate.isEmpty() || CourseTime.isEmpty() || Location.isEmpty() || Fee.isEmpty() || TutorName.isEmpty()){
-            JOptionPane.showMessageDialog(this,
-                "Please enter all fields",
-                "Try again",
-                JOptionPane.ERROR_MESSAGE);
+    // 1. 检查是否有空值
+    if (subject.isEmpty() || courseDate.isEmpty() || courseTime.isEmpty() ||
+        location.isEmpty() || fee.isEmpty() || tutorName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please fill in all fields.",
+                "Incomplete Data", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // 2. 检查日期格式（yyyy-MM-dd）
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    sdf.setLenient(false); // 不接受 2025-02-30
+    try {
+        sdf.parse(courseDate); // 解析不成功就跳到 catch
+    } catch (ParseException e) {
+        JOptionPane.showMessageDialog(this,
+                "Invalid date format. Please use yyyy-MM-dd.",
+                "Date Format Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // 3. 自动生成 Class ID，如 C001、C002…
+    DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
+    int rowCount = model.getRowCount();
+    String classID = String.format("C%03d", rowCount + 1);
+
+    // 4. 检查是否重复（可选）
+    for (int i = 0; i < rowCount; i++) {
+        if (model.getValueAt(i, 0).toString().equals(classID)) {
+            classID = String.format("C%03d", rowCount + 2); // 避免重复
         }
-        else if(!CourseDate.matches("^\\d{4}-\\d{2}-\\d{2}$")){
-            JOptionPane.showMessageDialog(this, "Invaild date format. Use YYYY-MM-DD (e.g.2025-08-10.","Error", JOptionPane.ERROR_MESSAGE);
-        }else{
-            DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
-            model.addRow(new Object[]{ClassID, Subject, CourseDate, CourseTime, Location, Fee, TutorName});
+    }
 
-            try (BufferedWriter bw = new BufferedWriter (new FileWriter("ClassInfo.txt"))){                        
-                for (int i = 0;i < model.getRowCount(); i++){
-                    for (int j = 0; j< model.getColumnCount(); j++){
-                        Object value = model.getValueAt(i,j);
-                        String cell = value != null? value.toString().replace(",","") : "";
-                        bw.write(cell);
-                        if (j < model.getColumnCount() -1) bw.write(",");
+    // 5. 添加到 JTable
+    Object[] row = {
+        classID,
+        subject,
+        courseDate,
+        courseTime,
+        location,
+        fee,
+        tutorName
+    };
+    model.addRow(row);
 
-                    }
-                    bw.newLine();
-                }
+    // 6. 写入文件（追加方式）
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter("ClassInfo.txt", true))) {
+        String line = String.join(",", classID, subject, courseDate, courseTime, location, fee, tutorName);
+        bw.write(line);
+        bw.newLine();
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error saving to file.",
+                "File Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            }catch(Exception e){
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "ERROR: "+ e.getMessage());
-            }
-          
-            tfClassId.setText("");
-            
-            tfCourseDate.setText("");
-            tfCourseTime.setText("");
-            tfLocation.setText("");
-            tfFee.setText("");
-            tfTutorName.setText("");
-        }
+    // 7. 清空输入字段
+    tfCourseDate.setText("");
+    tfCourseTime.setText("");
+    tfLocation.setText("");
+    tfFee.setText("");
+    tfTutorName.setText("");
+    comsubject.setSelectedIndex(0);
+
+    // 8. 成功提示
+    JOptionPane.showMessageDialog(this, "Class information added successfully.");
     }//GEN-LAST:event_btnADDActionPerformed
 
     private void tfCourseTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfCourseTimeActionPerformed
@@ -461,19 +512,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
     }//GEN-LAST:event_tfSearchActionPerformed
 
     private void comsubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comsubjectActionPerformed
-        String selectedSubject = comsubject.getSelectedItem().toString();
-        
-        DefaultTableModel model = (DefaultTableModel) tableClassInfo.getModel();
-        
-        Object[] newRow ={
-            "",
-            selectedSubject,
-            "",
-            "",
-            "",
-            "",
-            "",
-        };
+
     }//GEN-LAST:event_comsubjectActionPerformed
     
     /**
