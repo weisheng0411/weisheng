@@ -2,15 +2,13 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -26,17 +24,55 @@ import javax.swing.table.TableRowSorter;
  * @author wei sheng
  */
 public class ManageClassInfoGui extends javax.swing.JFrame {
-
-    /**
+    private String currentuserID;
+    private DefaultTableModel model;
+    
+    /**private DefaultTableModel model;
      * Creates new form ManageClassInfoGui
      */
     public ManageClassInfoGui() {
         initComponents();
-        loadClassInfoFile();
         
+        
+        String currentuserID = LoginPage.loggedInUserID;
+        
+        model = (DefaultTableModel) tableClassInfo.getModel();
+        loadClassInfoFile(currentuserID);
+      
+        loadTutorSubjects(currentuserID);
     }
-    private void loadClassInfoFile(){
-        
+    private void loadTutorSubjects(String userID) {
+        comsubject.removeAllItems();
+    try (BufferedReader br = new BufferedReader(new FileReader("tutor.txt"))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts.length >= 8 && parts[0].trim().equalsIgnoreCase(userID.trim())) {
+                comsubject.removeAllItems(); // 🔴 也要确保 comsubject 是类的全局变量
+                for (int i = 7; i < parts.length; i++) {
+                    comsubject.addItem(parts[i].trim());
+                }
+                break;
+            }
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error loading tutor subjects: " + e.getMessage());
+    }
+}
+
+    private void loadClassInfoFile(String userID){
+        model.setRowCount(0);
+        try (BufferedReader br = new BufferedReader(new FileReader("ClassInfo.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(";");
+                if (data.length >= 8 && data[0].startsWith(userID)) {
+                    model.addRow(data);
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading class info: " + e.getMessage());
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -544,9 +580,7 @@ public class ManageClassInfoGui extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String []args) {
-         
-        System.out.println("Current directory: " + System.getProperty("user.dir"));
-        System.out.println("Saving to: " + new File("ClassInfo.txt").getAbsolutePath());
+      
 
 
         java.awt.EventQueue.invokeLater(new Runnable() {

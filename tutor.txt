@@ -1,0 +1,3 @@
+T001,Ali Ahmad,ali123,pass123,ali@gmail.com,0123456789,Expert,Mathematics,Physics
+T002,Siti Nurhaliza,siti88,password88,siti@yahoo.rt,Mathematics|Physicscom,0198765432,Advanced,Chemistry|Biology
+T003,Lim Wei Sheng,weisheng,w3ish3ng123,weisheng@mail.com,0112233445,Intermediate,English|History
