@@ -1,2 +1,0 @@
-Student ID,Name,Username,Password,Email,Contact Number,Address,Education Level,IC,Subject 1,Tutor 1,Subject 2,Tutor 2,Subject 3,Tutor 3,Month of Enrollment
-S001,kai,kai11,1234,kai@gmail.com,1234567890,KL,Lower Form,123456789012,Chinese,kai,English,ler,None,None,March
