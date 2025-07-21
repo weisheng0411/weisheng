@@ -20,7 +20,7 @@ public class SaveFile {
     public static void stu_enrollFile(JTable table,JFrame parentFrame){
         try(BufferedWriter bw = new BufferedWriter(new FileWriter("student_enroll.txt"))){
             
-            bw.write("Student ID,Name,Username,Password,Email,Contact Number,Address,Education Level,IC,Subject 1,Tutor 1,Subject 2,Tutor 2,Subject 3,Tutor 3,Month of Enrollment\n");
+            bw.write("User ID,Name,Username,Password,Email,Contact Number,Address,Education Level,IC,Subject 1,Tutor 1,Subject 2,Tutor 2,Subject 3,Tutor 3,Month of Enrollment\n");
 
             DefaultTableModel model = (DefaultTableModel) table.getModel();
             for (int i = 0;i < model.getRowCount(); i++){
