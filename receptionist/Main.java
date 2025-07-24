@@ -21,6 +21,7 @@ public class Main extends javax.swing.JFrame {
     public Main(String userID) {
         initComponents();
         this.currentuserID = userID;
+        in_userId.setText(userID);
         
     }
 
