@@ -1,3 +1,0 @@
-Name,Amount Payable,Total Collected,Status
-kai,RM 1000,RM 0,Unpaid
-ler,RM 2000,RM 0,Unpaid
