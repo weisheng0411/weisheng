@@ -45,14 +45,18 @@ public class Page_RnM_Stu extends javax.swing.JFrame {
                 in_tutor.addItem("None");
                 
                 String subject = (String) in_subject.getSelectedItem();
-                try(BufferedReader br = new BufferedReader(new FileReader ("ClassInfo.txt"))){
+                try(BufferedReader br = new BufferedReader(new FileReader ("Tutor.txt"))){
                     String line;
 
                     while ((line = br.readLine()) != null){
                         String[] parts = line.split(",");
-                        //7 = subject 1 = tutor
-                        if (parts[1].equals(subject)){
-                            in_tutor.addItem(parts[6]);
+                        if (parts.length >= 8){
+                            String fileSubject = parts[7].trim();
+                            String tutorName = parts[1].trim();
+                            
+                            if (fileSubject.equalsIgnoreCase(subject)){
+                                in_tutor.addItem(tutorName);
+                            }
                         }
                     }
                 } catch (IOException ex){
