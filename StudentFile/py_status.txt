@@ -1,0 +1,7 @@
+Name,Amount Payable,Total Collected,Status
+John Doe,1200.00,800.00,Partial
+Jane Smith,800.00,800.00,Paid
+Alex Wong,1000.00,0.00,Unpaid
+Sarah Lee,900.00,900.00,Paid
+Mohd Ali,1200.00,600.00,Partial
+John Doe,500.00,500.00,Paid

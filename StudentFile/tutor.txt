@@ -1,0 +1,6 @@
+UserID,Name,Username,Password,Email,Contact,Level,Subject
+T001,Dr. Ahmad,ahmad,teach123,ahmad@email.com,0111222333,GA,Math
+T002,Ms. Lim,lim,teach456,lim@email.com,0111222444,GB,Science
+T003,Mr. Raj,raj,teach789,raj@email.com,0111222555,GC,English
+T004,Dr. Chen,chen,teach101,chen@email.com,0111222666,GA,Physics
+T005,Ms. Koh,koh,teach202,koh@email.com,0111222777,GB,Chemistry

@@ -1,0 +1,11 @@
+ClassID，Subject	,Course Date,Course Time,Location,Fee,Tutor Name,Tutor ID
+C101,Math,Mon/Wed/Fri,09:00-10:30,Block A Room 101,1200,Dr. Ahmad,T001
+C102,Science,Tue/Thu,10:00-12:00,Block B Lab 3,1500,Ms. Lim,T002
+C103,English,Mon/Wed,14:00-15:30,Block C Room 205,1000,Mr. Raj,T003
+C104,Physics,Tue/Fri,13:00-15:00,Block D Lab 1,1400,Dr. Chen,T004
+C105,Chemistry,Wed/Thu,08:30-10:00,Block B Lab 2,1300,Ms. Koh,T005
+C106,History,Mon/Thu,11:00-12:30,Block A Room 102,900,Mr. Tan,T006
+C107,Biology,Fri,10:00-13:00,Block D Lab 3,1600,Dr. Ng,T007
+C108,Malay,Tue/Wed,15:00-16:30,Block C Room 104,800,Ms. Devi,T008
+C109,Math,Tue/Thu,16:00-17:30,Block A Room 103,1100,Dr. Ahmad,T001
+C110,Science,Mon/Wed/Fri,08:00-09:30,Block B Lab 1,1450,Ms. Lim,T002
