@@ -1,6 +1,4 @@
-package Admin;
 
-import Admin.AdminDashboard;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -13,10 +11,9 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class ManageReceptionist extends javax.swing.JFrame {
-    private String userID;
+
    
-    public ManageReceptionist(String userID) {
-        this.userID = userID;
+    public ManageReceptionist() {
         initComponents();
     }
 
@@ -92,7 +89,7 @@ public class ManageReceptionist extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("User ID:RXXXX");
+        jLabel9.setText("User ID:RXXX");
 
         REmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,7 +97,9 @@ public class ManageReceptionist extends javax.swing.JFrame {
             }
         });
 
-        RUserID.setText("R");
+        RUserID.setEditable(false);
+        RUserID.setText("<default>");
+        RUserID.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         RUserID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RUserIDActionPerformed(evt);
@@ -264,31 +263,74 @@ public class ManageReceptionist extends javax.swing.JFrame {
     }//GEN-LAST:event_RUserIDActionPerformed
 
     private void RRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RRegisterActionPerformed
-        String UserID = RUserID.getText();
-        String Name = RName.getText();
-        var Username = RUsername.getText();
-        String Password = RPassword.getText();
-        String Email = REmail.getText();
-        var Contact = RContact.getText();
+            // Auto-generate ID and get inputs
+    String id = "R" + String.format("%03d", getNextID()); 
+    String[] data = {
+        id,
+        RName.getText().trim(),
+        RUsername.getText().trim(),
+        new String(RPassword.getPassword()).trim(),
+        REmail.getText().trim(),
+        RContact.getText().trim()
+    };
 
-        if (UserID.isEmpty()||Name.isEmpty()||Username.isEmpty()||Password.isEmpty()||Email.isEmpty()||Contact.isEmpty()){
-            JOptionPane.showMessageDialog(this,
-                "Please enter all fields",
-                "Try again",
+    // Validate
+    if (!isValid(data)) return;
+
+    // Add to table and reset
+    ((DefaultTableModel) RTable.getModel()).addRow(data);
+    clearFields();
+    RUserID.setText("R" + String.format("%03d", getNextID()));
+    JOptionPane.showMessageDialog(this, "Registered! ID: " + id, "Success", JOptionPane.INFORMATION_MESSAGE);
+}
+
+// Helper Methods
+private int getNextID() {
+    return ((DefaultTableModel) RTable.getModel()).getRowCount() + 1;
+}
+
+private boolean isValid(String[] data) {
+    // Check empty fields
+    String[] fieldNames = {"Name", "Username", "Password", "Email", "Contact"};
+    for (int i = 1; i < data.length; i++) {
+        if (data[i].isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "Please enter " + fieldNames[i-1], 
+                "Error", 
                 JOptionPane.ERROR_MESSAGE);
-
-        }else{
-            DefaultTableModel model = (DefaultTableModel) RTable.getModel();
-            model.addRow(new Object[]{UserID,Name,Username,Password,Email,Contact});
-
-            RUserID.setText("");
-            RName.setText("");
-            RUsername.setText("");
-            RPassword.setText("");
-            REmail.setText("");
-            RContact.setText("");
+            return false;
         }
+    }
+    
+    // Validate email format
+    if (!data[4].contains("@") || !data[4].contains(".")) {
+        JOptionPane.showMessageDialog(this,
+            "Invalid email format",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        REmail.requestFocus();
+        return false;
+    }
+    
+    // Validate contact number
+    if (!data[5].matches("\\d{10,15}")) {
+        JOptionPane.showMessageDialog(this,
+            "Contact must be 10-15 digits",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        RContact.requestFocus();
+        return false;
+    }
+    
+    return true;
+}
 
+private void clearFields() {
+    RName.setText("");
+    RUsername.setText("");
+    RPassword.setText("");
+    REmail.setText("");
+    RContact.setText("");
     }//GEN-LAST:event_RRegisterActionPerformed
 
     private void RDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RDeleteActionPerformed
@@ -306,7 +348,7 @@ public class ManageReceptionist extends javax.swing.JFrame {
     }//GEN-LAST:event_RDeleteActionPerformed
 
     private void RClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RClearActionPerformed
-        RUserID.setText("");
+        RUserID.setText("<default>");
         RName.setText("");
         RUsername.setText("");
         RPassword.setText("");
@@ -370,7 +412,7 @@ DefaultTableModel model = (DefaultTableModel) RTable.getModel();
     // Then proceed with the original code
     java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-            new AdminDashboard(userID).setVisible(true);
+            new Dashboard().setVisible(true);
         }
     });
     this.dispose();
@@ -379,37 +421,37 @@ DefaultTableModel model = (DefaultTableModel) RTable.getModel();
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new ManageReceptionist().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ManageReceptionist.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ManageReceptionist().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ABack;

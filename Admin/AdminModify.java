@@ -1,16 +1,10 @@
-package Admin;
-
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,38 +18,17 @@ import javax.swing.table.DefaultTableModel;
  * @author Sam JunYi
  */
 public class AdminModify extends javax.swing.JFrame {
-    private String userID;
+    private String currentUserID = "A001";
+    private String[] originalAdminData;
+
     /**
      * Creates new form AdminManagement
      */
-    public AdminModify(String userID) {
-        this.userID = userID;
+    public AdminModify() {
         initComponents();
         
     }
 
-private List<String[]> readDataFromFile(String filename) throws IOException {
-    List<String[]> data = new ArrayList<>();
-    File file = new File(filename);
-    
-    if (!file.exists()) {
-        return data;
-    }
-
-    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-        // 跳过表头行
-        reader.readLine();
-        // 跳过分隔线
-        reader.readLine();
-        
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] rowData = line.split(" \\| ");
-            data.add(rowData);
-        }
-    }
-    return data;
-}
 
 
     /**
@@ -71,7 +44,6 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
         javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         ATable = new javax.swing.JTable();
-        javax.swing.JButton ADelete = new javax.swing.JButton();
         javax.swing.JLabel jLabel4 = new javax.swing.JLabel();
         APassword = new javax.swing.JPasswordField();
         javax.swing.JLabel jLabel5 = new javax.swing.JLabel();
@@ -86,7 +58,7 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
         javax.swing.JLabel jLabel8 = new javax.swing.JLabel();
         AUsername = new javax.swing.JTextField();
         javax.swing.JButton AClear = new javax.swing.JButton();
-        javax.swing.JButton ARegister = new javax.swing.JButton();
+        javax.swing.JButton AUpdate = new javax.swing.JButton();
         ABack = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -119,15 +91,6 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
         ));
         jScrollPane1.setViewportView(ATable);
 
-        ADelete.setBackground(new java.awt.Color(255, 204, 51));
-        ADelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        ADelete.setText("Delete");
-        ADelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ADeleteActionPerformed(evt);
-            }
-        });
-
         jLabel4.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Password:");
@@ -144,7 +107,7 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("User ID:AXXXX");
+        jLabel9.setText("User ID:AXXX");
 
         AEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -152,7 +115,8 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
             }
         });
 
-        AUserID.setText("A");
+        AUserID.setEditable(false);
+        AUserID.setText("<default>");
         AUserID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AUserIDActionPerformed(evt);
@@ -165,7 +129,7 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Registeration Admin :");
+        jLabel2.setText("Admin Modify");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -190,12 +154,12 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
             }
         });
 
-        ARegister.setBackground(new java.awt.Color(204, 204, 204));
-        ARegister.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        ARegister.setText("Register");
-        ARegister.addActionListener(new java.awt.event.ActionListener() {
+        AUpdate.setBackground(new java.awt.Color(204, 204, 204));
+        AUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        AUpdate.setText("Update");
+        AUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ARegisterActionPerformed(evt);
+                AUpdateActionPerformed(evt);
             }
         });
 
@@ -225,13 +189,11 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
                             .addComponent(jLabel9)
                             .addComponent(jLabel3)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(ARegister)
+                                .addComponent(AUpdate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(AClear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(ABack)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ADelete)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -285,8 +247,7 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ADelete)
-                    .addComponent(ARegister)
+                    .addComponent(AUpdate)
                     .addComponent(AClear)
                     .addComponent(ABack))
                 .addContainerGap(32, Short.MAX_VALUE))
@@ -308,40 +269,108 @@ private List<String[]> readDataFromFile(String filename) throws IOException {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ADeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ADeleteActionPerformed
-        int row = ATable.getSelectedRow();
+private boolean validateInputs() {
+    // Name validation
+    if (AName.getText().trim().isEmpty()) {
+        showError("Please enter your name", "Name Required", AName);
+        return false;
+    }
+    if (!AName.getText().matches("^[a-zA-Z ]+$")) {
+        showError("Name can only contain letters and spaces", "Invalid Name", AName);
+        return false;
+    }
 
-        if (row < 0){
-            JOptionPane.showMessageDialog(this,
-                "Please enter all fields",
-                "Try again",
-                JOptionPane.ERROR_MESSAGE);
-        } else{
-            DefaultTableModel model = (DefaultTableModel) ATable.getModel();
-            model.removeRow(row);
-        }
-    }//GEN-LAST:event_ADeleteActionPerformed
+    // Username validation
+    if (AUsername.getText().trim().isEmpty()) {
+        showError("Please enter a username", "Username Required", AUsername);
+        return false;
+    }
+    if (!AUsername.getText().matches("^[a-zA-Z0-9_]{4,20}$")) {
+        showError("Username must be 4-20 characters (letters, numbers, underscores)", "Invalid Username", AUsername);
+        return false;
+    }
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-DefaultTableModel model = (DefaultTableModel) ATable.getModel();
-    model.setRowCount(0); // 清空现有数据
-    
-    try (BufferedReader reader = new BufferedReader(new FileReader("Admin.txt"))) {
-        // 跳过表头行和分隔线
-        reader.readLine(); // 表头
-        reader.readLine(); // 分隔线
-        
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] rowData = line.split(" \\| "); // 按分隔符拆分
-            model.addRow(rowData);
+    // Password validation (only if changed)
+    String password = new String(APassword.getPassword());
+    if (!password.isEmpty()) {
+        if (password.length() < 8) {
+            showError("Password must be at least 8 characters", "Weak Password", APassword);
+            return false;
         }
-    } catch (IOException ex) {
-        // 文件不存在时创建新文件是正常的，不需要打印错误
-        if (!(ex instanceof FileNotFoundException)) {
-            ex.printStackTrace();
+        if (!password.matches(".*[A-Z].*")) {
+            showError("Password must contain at least one uppercase letter", "Weak Password", APassword);
+            return false;
+        }
+        if (!password.matches(".*[0-9].*")) {
+            showError("Password must contain at least one number", "Weak Password", APassword);
+            return false;
         }
     }
+
+    // Email validation
+    if (AEmail.getText().trim().isEmpty()) {
+        showError("Please enter your email", "Email Required", AEmail);
+        return false;
+    }
+    if (!AEmail.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,}$")) {
+        showError("Please enter a valid email address", "Invalid Email", AEmail);
+        return false;
+    }
+
+    // Contact validation
+    if (AContact.getText().trim().isEmpty()) {
+        showError("Please enter your contact number", "Contact Required", AContact);
+        return false;
+    }
+    if (!AContact.getText().matches("^\\d{10,15}$")) {
+        showError("Contact must be 10-15 digits", "Invalid Contact", AContact);
+        return false;
+    }
+
+    return true;
+}
+
+private void showError(String message, String title, JComponent field) {
+    JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+    field.requestFocus();
+}
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+DefaultTableModel model = (DefaultTableModel) ATable.getModel();
+        model.setRowCount(0);
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader("Admin.txt"))) {
+            String header = reader.readLine(); // Read and ignore header
+            
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] rowData = line.split(",");
+                if (rowData.length >= 6) { // Ensure we have all fields
+                    model.addRow(new Object[]{
+                        rowData[0], // UserID
+                        rowData[1], // Name
+                        rowData[2], // Username
+                        rowData[4], // Email
+                        rowData[5]  // Contact
+                    });
+                    
+                    // Load current admin's data into form
+                    if (rowData[0].equals(currentUserID)) {
+                        originalAdminData = rowData.clone();
+                        AUserID.setText(rowData[0]);
+                        AName.setText(rowData[1]);
+                        AUsername.setText(rowData[2]);
+                        APassword.setText(""); // Don't show password
+                        AEmail.setText(rowData[4]);
+                        AContact.setText(rowData[5]);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, 
+                "Error loading admin data: " + ex.getMessage(),
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -370,80 +399,87 @@ DefaultTableModel model = (DefaultTableModel) ATable.getModel();
         
     }//GEN-LAST:event_AClearActionPerformed
 
-    private void ARegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ARegisterActionPerformed
-        String userID = AUserID.getText();
-        String Name = AName.getText();
-        var Username = AUsername.getText();
-        String Password = APassword.getText();
-        String Email = AEmail.getText();
-        var Contact = AContact.getText();
-
-
-        if (userID.isEmpty()||Name.isEmpty()||Username.isEmpty()||Password.isEmpty()||Email.isEmpty()||Contact.isEmpty()){
-            JOptionPane.showMessageDialog(this,
-                "Please enter all fields",
-                "Try again",
+    private void AUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AUpdateActionPerformed
+    if (!AUserID.getText().equals(currentUserID)) {
+            JOptionPane.showMessageDialog(this, 
+                "You can only update your own profile", 
+                "Access Denied", 
                 JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    if (!validateInputs()) {
+        return;
+    }
 
-        }else{
-            DefaultTableModel model = (DefaultTableModel) ATable.getModel();
-            model.addRow(new Object[]{userID,Name,Username,Password,Email,Contact});
+        // Get and validate inputs
+        String name = AName.getText().trim();
+        String password = new String(APassword.getPassword()).trim();
+        String email = AEmail.getText().trim();
+        String contact = AContact.getText().trim();
 
-            AUserID.setText("");
-            AName.setText("");
-            AUsername.setText("");
-            APassword.setText("");
-            AEmail.setText("");
-            AContact.setText("");
-            
+        if (name.isEmpty() || email.isEmpty() || contact.isEmpty()) {
+            JOptionPane.showMessageDialog(this, 
+                "All fields are required", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-    }//GEN-LAST:event_ARegisterActionPerformed
+        // Update the table
+        DefaultTableModel model = (DefaultTableModel) ATable.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (model.getValueAt(i, 0).equals(currentUserID)) {
+                model.setValueAt(name, i, 1);
+                model.setValueAt(email, i, 3);
+                model.setValueAt(contact, i, 4);
+                break;
+            }
+        }
+        
+        JOptionPane.showMessageDialog(this, 
+            "Profile updated (will be saved when closing)", 
+            "Success", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_AUpdateActionPerformed
 
     private void APasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_APasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_APasswordActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-DefaultTableModel model = (DefaultTableModel) ATable.getModel();
-Vector<Vector> tableData = model.getDataVector();
-
-try (BufferedWriter writer = new BufferedWriter(new FileWriter("Admin.txt"))) {
-    // Write column headers
-    for (int col = 0; col < model.getColumnCount(); col++) {
-        writer.write(model.getColumnName(col));
-        if (col < model.getColumnCount() - 1) {
-            writer.write(",");  // Changed from " | " to comma
-        }
-    }
-    writer.newLine();
-    
-    // Write data rows
-    for (Vector row : tableData) {
-        for (int col = 0; col < row.size(); col++) {
-            // Handle potential commas in data by wrapping in quotes
-            String value = row.get(col).toString();
-            if (value.contains(",")) {
-                value = "\"" + value + "\"";
+private void saveAdminData() {
+        DefaultTableModel model = (DefaultTableModel) ATable.getModel();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Admin.txt"))) {
+            // Write header
+            writer.write("UserID,Name,Username,Password,Email,Contact\n");
+            
+            // Write data
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String password = originalAdminData != null && 
+                                model.getValueAt(i, 0).equals(currentUserID) ?
+                                (new String(APassword.getPassword()).isEmpty() ? 
+                                    originalAdminData[3] : 
+                                    new String(APassword.getPassword())) :
+                                "password"; // Default for other admins
+                
+                writer.write(String.format("%s,%s,%s,%s,%s,%s\n",
+                    model.getValueAt(i, 0),
+                    model.getValueAt(i, 1),
+                    model.getValueAt(i, 2),
+                    password,
+                    model.getValueAt(i, 3),
+                    model.getValueAt(i, 4)
+                ));
             }
-            writer.write(value);
-            if (col < row.size() - 1) {
-                writer.write(",");  // Changed from " | " to comma
-            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error saving data: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
-        writer.newLine();
-    }
-    
-    JOptionPane.showMessageDialog(this, 
-        "Data saved successfully to Admin.txt",
-        "Save Complete",
-        JOptionPane.INFORMATION_MESSAGE);
-} catch (IOException ex) {
-    JOptionPane.showMessageDialog(this,
-        "Error saving data: " + ex.getMessage(),
-        "Save Error",
-        JOptionPane.ERROR_MESSAGE);
 }
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+if (evt.getSource() == this) { // Only save if the event comes from this window
+            saveAdminData();
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void ABackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ABackActionPerformed
@@ -452,7 +488,7 @@ try (BufferedWriter writer = new BufferedWriter(new FileWriter("Admin.txt"))) {
     // Then proceed with the original code
     java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-            new AdminDashboard(userID).setVisible(true);
+            new Dashboard().setVisible(true);
         }
     });
     this.dispose();
@@ -461,38 +497,38 @@ try (BufferedWriter writer = new BufferedWriter(new FileWriter("Admin.txt"))) {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new AdminModify().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AdminModify.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AdminModify().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ABack;

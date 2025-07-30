@@ -1,4 +1,3 @@
-package Admin;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,12 +20,11 @@ import javax.swing.table.DefaultTableModel;
  * @author Sam JunYi
  */
 public class ManageTutor extends javax.swing.JFrame {
-    private String userID;
+
     /**
      * Creates new form RegisterTutor
      */
-    public ManageTutor(String userID) {
-        this.userID = userID;
+    public ManageTutor() {
         initComponents();
     }
 
@@ -43,7 +41,7 @@ public class ManageTutor extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         javax.swing.JScrollPane jScrollPane1 = new javax.swing.JScrollPane();
         RTable = new javax.swing.JTable();
-        javax.swing.JLabel jLabel9 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         javax.swing.JButton RRegister = new javax.swing.JButton();
         javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
         RUserID = new javax.swing.JTextField();
@@ -104,7 +102,7 @@ public class ManageTutor extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("User ID:TXXXX");
+        jLabel9.setText("User ID:TXXX");
 
         RRegister.setBackground(new java.awt.Color(204, 204, 204));
         RRegister.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -119,7 +117,8 @@ public class ManageTutor extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Contact number:");
 
-        RUserID.setText("T");
+        RUserID.setEditable(false);
+        RUserID.setText("<default>");
         RUserID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 RUserIDActionPerformed(evt);
@@ -390,10 +389,6 @@ public class ManageTutor extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_RSubjectActionPerformed
 
-    private void RUserIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RUserIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RUserIDActionPerformed
-
     private void RDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RDeleteActionPerformed
         int row = RTable.getSelectedRow();
         
@@ -409,42 +404,108 @@ public class ManageTutor extends javax.swing.JFrame {
     }//GEN-LAST:event_RDeleteActionPerformed
 
     private void RRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RRegisterActionPerformed
+    // Auto-generate UserID
+    String UserID = generateNextTutorID();
+    RUserID.setText(UserID);  // Display generated ID
+    
     // Get input values
-    String UserID = RUserID.getText().trim();
     String Name = RName.getText().trim();
     String Username = RUsername.getText().trim();
-    String Password = RPassword.getText().trim();
+    String Password = new String(RPassword.getPassword()).trim(); // For JPasswordField
     String Email = REmail.getText().trim();
     String Contact = RContact.getText().trim();
-    ButtonModel TutorLevel = RTutorLevel.getSelection();
     String Subject = RSubject.getText().trim();
     
-    // Initialize level as null
+    // Get selected tutor level
     String level = null;
-    
-    // Get level only if TutorLevel is not null
-    if (TutorLevel != null) {
-        level = TutorLevel.getActionCommand();
+    if (RTutorLevel.getSelection() != null) {
+        level = RTutorLevel.getSelection().getActionCommand();
     }
     
-    // Validate inputs (now checking level instead of TutorLevel)
-    if (UserID.isEmpty() || Name.isEmpty() || Username.isEmpty() || 
-        Password.isEmpty() || Email.isEmpty() || Contact.isEmpty() || 
-        level == null || Subject.isEmpty()) {
-        
-        JOptionPane.showMessageDialog(this,
-                "Please fill in all required fields",
-                "Missing Information",
-                JOptionPane.ERROR_MESSAGE);
+    // Validate inputs
+    if (Name.isEmpty()) {
+        showError("Please enter tutor name", "Missing Name");
+        RName.requestFocus();
         return;
     }
     
-    // Add to table model
+    if (Username.isEmpty() || Username.contains(" ")) {
+        showError("Username cannot be empty or contain spaces", "Invalid Username");
+        RUsername.requestFocus();
+        return;
+    }
+    
+    if (Password.length() < 8) {
+        showError("Password must be at least 8 characters", "Weak Password");
+        RPassword.requestFocus();
+        return;
+    }
+    
+    if (!isValidEmail(Email)) {
+        showError("Please enter a valid email address", "Invalid Email");
+        REmail.requestFocus();
+        return;
+    }
+    
+    if (!Contact.matches("\\d{10,15}")) {
+        showError("Contact must be 10-15 digits only", "Invalid Contact");
+        RContact.requestFocus();
+        return;
+    }
+    
+    if (level == null) {
+        showError("Please select tutor level", "Level Required");
+        return;
+    }
+    
+    if (Subject.isEmpty()) {
+        showError("Please enter subject specialization", "Subject Required");
+        RSubject.requestFocus();
+        return;
+    }
+    
+    // Add to table
     DefaultTableModel model = (DefaultTableModel) RTable.getModel();
     model.addRow(new Object[]{UserID, Name, Username, Password, Email, Contact, level, Subject});
     
-    // Clear fields
-    RUserID.setText("");
+    // Clear form
+    clearTutorForm();
+    
+    // Generate next ID
+    RUserID.setText(generateNextTutorID());
+    
+    // Show success
+    showSuccess("Tutor registered successfully! ID: " + UserID);
+}
+
+// Helper methods
+private String generateNextTutorID() {
+    DefaultTableModel model = (DefaultTableModel) RTable.getModel();
+    int maxID = 0;
+    
+    for (int i = 0; i < model.getRowCount(); i++) {
+        String id = model.getValueAt(i, 0).toString();
+        if (id.matches("T\\d{3}")) { // T001, T002 format for tutors
+            int num = Integer.parseInt(id.substring(1));
+            maxID = Math.max(maxID, num);
+        }
+    }
+    return String.format("T%03d", maxID + 1);
+}
+
+private boolean isValidEmail(String email) {
+    return email.matches("^[\\w.-]+@[\\w.-]+\\.[a-z]{2,}$");
+}
+
+private void showError(String message, String title) {
+    JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+}
+
+private void showSuccess(String message) {
+    JOptionPane.showMessageDialog(this, message, "Success", JOptionPane.INFORMATION_MESSAGE);
+}
+
+private void clearTutorForm() {
     RName.setText("");
     RUsername.setText("");
     RPassword.setText("");
@@ -452,10 +513,11 @@ public class ManageTutor extends javax.swing.JFrame {
     RContact.setText("");
     RTutorLevel.clearSelection();
     RSubject.setText("");
+
     }//GEN-LAST:event_RRegisterActionPerformed
 
     private void RClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RClearActionPerformed
-        RUserID.setText("");
+
         RName.setText("");
         RUsername.setText("");
         RPassword.setText("");
@@ -526,47 +588,51 @@ public class ManageTutor extends javax.swing.JFrame {
     // Then proceed with the original code
     java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-            new AdminDashboard(userID).setVisible(true);
+            new Dashboard().setVisible(true);
         }
     });
     this.dispose();
     }//GEN-LAST:event_ABackActionPerformed
 
+    private void RUserIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RUserIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RUserIDActionPerformed
+
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new ManageTutor().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ManageTutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ManageTutor().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ABack;
@@ -582,6 +648,7 @@ public class ManageTutor extends javax.swing.JFrame {
     private javax.swing.ButtonGroup RTutorLevel;
     private javax.swing.JTextField RUserID;
     private javax.swing.JTextField RUsername;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
