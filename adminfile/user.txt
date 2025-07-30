@@ -1,0 +1,15 @@
+userID,Name,Username,Password,Email,Contact,Address,Level,Role
+S0001,John Doe,Doee,couwbvU0,john@email.com,0123456789,123 Main St, City,5,student
+S0002,Jane Smith,janesmith,abc456,jane@email.com,9876543210,456 Oak Ave, Town,3,student
+S0003,Alex Wong,alexw,xyz789,alex@email.com,0112345678,789 Pine Rd,2,student
+S0004,Sarah Lee,sarahlee,qwerty,sarah@email.com,0198765432,88 Park Road,4,student
+S0005,Mohd Ali,mali,pass789,mali@email.com,0129876543,Kampung Baru, KL,6,student
+R001,Linda Ng,lindang,admin123,linda@email.com,0111333444,null,null,receptionist
+R002,David Tan,davidtan,admin456,david@email.com,0111333555,null,null,receptionist
+T001,Dr. Ahmad,ahmad,teach123,ahmad@email.com,0111222333,null,GA,tutor
+T002,Ms. Lim,lim,teach456,lim@email.com,0111222444,null,GB,tutor
+T003,Mr. Raj,raj,teach789,raj@email.com,0111222555,null,GC,tutor
+T004,Dr. Chen,chen,teach101,chen@email.com,0111222666,null,GA,tutor
+T005,Ms. Koh,koh,teach202,koh@email.com,0111222777,null,GB,tutor
+A001,John Doe,johndoe,password123,john@example.com,0123456789,null,null,admin
+A002,Jane Smith,janesmith,password,jane@example.com,9876543210,null,null,admin

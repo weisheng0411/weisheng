@@ -1,0 +1,6 @@
+userID,name,username,password,email,contact,address,level,IC,Subject1,Tutor1,Subject2,Tutor2,Subject3,Tutor3,Month of Enrollment
+S0001,John Doe,Doee,couwbvU0,john@email.com,0123456789,"123 Main St, City",5,990101-01-1234,Math,T001,Science,T002,English,T003,January
+S0002,Jane Smith,janesmith,abc456,jane@email.com,9876543210,"456 Oak Ave, Town",3,000505-05-5678,History,T006,,T002,,T003,March
+S0003,Alex Wong,alexw,xyz789,alex@email.com,0112345678,"789 Pine Rd",2,010101-10-1010,Math,T001,Physics,T004,Chemistry,T005,September
+S0004,Sarah Lee,sarahlee,qwerty,sarah@email.com,0198765432,"88 Park Road",4,020202-02-2020,Biology,T007,Math,T001,Physics,T004,February
+S0005,Mohd Ali,mali,pass789,mali@email.com,0129876543,"Kampung Baru, KL",6,030303-03-3030,Science,T002,Malay,T008,History,T006,August

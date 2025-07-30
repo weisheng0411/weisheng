@@ -1,0 +1,3 @@
+User ID,Name,Username,Password,Email,Contact
+R001,Linda Ng,lindang,admin123,linda@email.com,0111333444
+R002,David Tan,davidtan,admin456,david@email.com,0111333555
