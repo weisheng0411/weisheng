@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Student;
+package StudentGUI;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,18 +12,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
 
 public class UpdateProfile extends javax.swing.JFrame {
-    private String userID; // Should be set during login
-    private String[] originalData = new String[14]; // To store original values
 
-    public UpdateProfile(String userID) {
-        this.userID = userID;
+
+    public UpdateProfile() {
         initComponents();
     }
-
+private String currentUserID = "S0001"; // Should be set during login
+ private String[] originalData = new String[17]; // To store original values
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -166,21 +166,57 @@ public class UpdateProfile extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+private boolean validateFields() {
+    // Username: 4-20 chars, alphanumeric
+    String username = SUsername.getText().trim();
+    if (!username.isEmpty() && !username.matches("^[a-zA-Z0-9]{4,20}$")) {
+        showError("Username must be 4-20 alphanumeric characters", SUsername);
+        return false;
+    }
 
+    // Password: 6+ chars with number and uppercase
+    String password = new String(SPassword.getPassword());
+    if (!password.isEmpty() && !password.matches("^(?=.*[A-Z])(?=.*\\d).{6,}$")) {
+        showError("Password needs 6+ chars with 1 uppercase and 1 number", SPassword);
+        return false;
+    }
+
+    // Email: basic format check
+    String email = SEmail.getText().trim();
+    if (!email.isEmpty() && !email.matches("^\\S+@\\S+\\.\\S+$")) {
+        showError("Invalid email format", SEmail);
+        return false;
+    }
+
+    // Contact: 10-12 digits
+    String contact = SContact.getText().trim();
+    if (!contact.isEmpty() && !contact.matches("^\\d{10,12}$")) {
+        showError("Contact must be 10-12 digits", SContact);
+        return false;
+    }
+
+    return true;
+}
+
+private void showError(String message, JComponent field) {
+    JOptionPane.showMessageDialog(this, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
+    field.requestFocus();
+}
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     formWindowClosing(new java.awt.event.WindowEvent(this, java.awt.event.WindowEvent.WINDOW_CLOSING));
     
     // Then proceed with the original code
     java.awt.EventQueue.invokeLater(new Runnable() {
         public void run() {
-            new StudentDashboard(userID).setVisible(true);
+            new Dashboard().setVisible(true);
         }
     });
     this.dispose(); 
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void ComfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComfirmActionPerformed
-         try {
+        if (!validateFields()) return; 
+        try {
             // 1. Read all lines from the file
             List<String> lines = Files.readAllLines(Paths.get("student_enroll.txt"));
             
@@ -188,7 +224,7 @@ public class UpdateProfile extends javax.swing.JFrame {
             boolean updated = false;
             for (int i = 0; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(",");
-                if (parts.length >= 13 && parts[0].equals(userID)) {
+                if (parts.length >= 13 && parts[0].equals(currentUserID)) {
                     // Store original data if not already stored
                     if (originalData[0] == null) {
                         System.arraycopy(parts, 0, originalData, 0, parts.length);
@@ -250,7 +286,7 @@ public class UpdateProfile extends javax.swing.JFrame {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data[0].equals(userID) && data.length >= 13) {
+                if (data[0].equals(currentUserID) && data.length >= 13) {
                     // Store original data
                     System.arraycopy(data, 0, originalData, 0, data.length);
                     
@@ -275,37 +311,37 @@ public class UpdateProfile extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new UpdateProfile().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(UpdateProfile.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new UpdateProfile().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Comfirm;

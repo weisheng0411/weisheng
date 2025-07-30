@@ -2,13 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Student;
+package StudentGUI;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,16 +16,14 @@ import javax.swing.table.DefaultTableModel;
  * @author Sam JunYi
  */
 public class RequestStatus extends javax.swing.JFrame {
-//    private String currentUserID = "S0001"; // Set this from login
-    private String userID;
+    private String currentUserID = "S0001"; // Set this from login
     private DefaultTableModel tableModel;
 
     /**
      * Creates new form StudentRequest
      */
-    public RequestStatus(String userID) {
+    public RequestStatus() {
         initComponents();
-        this.userID = userID;
     }
 
     /**
@@ -121,8 +118,8 @@ public class RequestStatus extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -150,141 +147,128 @@ public class RequestStatus extends javax.swing.JFrame {
     
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new SubjectEnrollment(userID).setVisible(true);
+                new SubjectEnrollment().setVisible(true);
             }
         });
     dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // Initialize table model
-        String[] columnNames = {"Name", "Old Subject", "New Subject", "Status"};
-        tableModel = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Make all cells non-editable
-            }
-        };
+        tableModel = new DefaultTableModel(
+            new String[]{"Name", "Old Subject", "New Subject", "Status"}, 0);
         RequestStatusTable.setModel(tableModel);
         
-        // Load only current user's requests
-        loadUserRequests();
-    }                                 
-
-    private void loadUserRequests() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("SER.txt"))) {
-            String line;
-            // Skip header
-            reader.readLine();
-            
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 4 && parts[0].trim().equalsIgnoreCase(userID)) {
-                    tableModel.addRow(new Object[]{
-                        parts[0].trim(),  // Name
-                        parts[1].trim(),  // Old Subject
-                        parts[2].trim(),  // New Subject
-                        parts[3].trim()   // Status
-                    });
-                }
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error reading status file: " + e.getMessage());
-        }
-    }//GEN-LAST:event_formWindowOpened
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int selectedRow = RequestStatusTable.getSelectedRow();
-        if (selectedRow >= 0) {
-            String status = tableModel.getValueAt(selectedRow, 3).toString();
-            if (status.equalsIgnoreCase("Pending")) {
-                tableModel.removeRow(selectedRow);
-                JOptionPane.showMessageDialog(this, "Request deleted successfully");
-            } else {
-                JOptionPane.showMessageDialog(this, 
-                    "Only pending requests can be deleted", 
-                    "Error", 
-                    JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, 
-                "Please select a request to delete", 
-                "No Selection", 
-                JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("py_status.txt"))) {
-            // Write header
-            writer.write("Name,Old Subject,New Subject,Status");
-            writer.newLine();
-            
-            // Get all data from table
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
-                String line = String.format("%s,%s,%s,%s",
-                    tableModel.getValueAt(i, 0),
-                    tableModel.getValueAt(i, 1),
-                    tableModel.getValueAt(i, 2),
-                    tableModel.getValueAt(i, 3));
-                writer.write(line);
-                writer.newLine();
-            }
-            
-            // Add any remaining requests from other users
-            try (BufferedReader reader = new BufferedReader(new FileReader("py_status.txt"))) {
-                String line;
-                // Skip header
-                reader.readLine();
-                
-                while ((line = reader.readLine()) != null) {
+        try {
+            // 1. Find student name
+            String studentName = null;
+            if (Files.exists(Paths.get("student_enroll.txt"))) {
+                for (String line : Files.readAllLines(Paths.get("student_enroll.txt"))) {
                     String[] parts = line.split(",");
-                    if (parts.length >= 4 && !parts[0].trim().equalsIgnoreCase(userID)) {
-                        writer.write(line);
-                        writer.newLine();
+                    if (parts.length >= 2 && currentUserID.equals(parts[0].trim())) {
+                        studentName = parts[1].trim();
+                        break;
                     }
                 }
             }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error saving status file: " + e.getMessage());
+            
+            if (studentName == null) {
+                JOptionPane.showMessageDialog(this, "Student not found");
+                return;
+            }
+
+            // 2. Load requests
+            if (Files.exists(Paths.get("SER.txt"))) {
+                for (String line : Files.readAllLines(Paths.get("SER.txt"))) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 4 && studentName.equals(parts[0].trim())) {
+                        tableModel.addRow(new Object[]{
+                            parts[0].trim(),
+                            parts[1].trim(),
+                            parts[2].trim(),
+                            parts[3].trim()
+                        });
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
         }
+    
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+int selectedRow = RequestStatusTable.getSelectedRow();
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a request first");
+        return;
+    }
+
+    String status = tableModel.getValueAt(selectedRow, 3).toString();
+    if (!"Pending".equalsIgnoreCase(status)) {
+        JOptionPane.showMessageDialog(this, "Only pending requests can be deleted");
+        return;
+    }
+
+    // Simply remove from table - file will be saved when window closes
+    tableModel.removeRow(selectedRow);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get("SER.txt"))) {
+        // Write header
+        writer.write("Name,Old Subject,New Subject,Status");
+        writer.newLine();
+        
+        // Write all current table data
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            writer.write(String.format("%s,%s,%s,%s",
+                tableModel.getValueAt(i, 0),
+                tableModel.getValueAt(i, 1),
+                tableModel.getValueAt(i, 2),
+                tableModel.getValueAt(i, 3)));
+            writer.newLine();
+        }
+        JOptionPane.showMessageDialog(this, "All changes saved to SER.txt");
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(this, "Error saving to SER.txt: " + e.getMessage());
+    }
     }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new RequestStatus().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(RequestStatus.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new RequestStatus().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable RequestStatusTable;

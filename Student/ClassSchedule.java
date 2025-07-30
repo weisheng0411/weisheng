@@ -1,4 +1,13 @@
-package Student;
+package StudentGUI;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -11,13 +20,14 @@ package Student;
  * @author Sam JunYi
  */
 public class ClassSchedule extends javax.swing.JFrame {
-        private String userID;
+    private String currentUserID = "S0001";
+
     /**
      * Creates new form ClassSchedule
      */
-    public ClassSchedule(String userID) {
+    public ClassSchedule() {
         initComponents();
-        this.userID = userID;
+        loadStudentSchedule(); 
     }
 
     /**
@@ -48,11 +58,11 @@ public class ClassSchedule extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Subject", "Course Date", "Course Time", "Location", "Tutor Name"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -65,6 +75,7 @@ public class ClassSchedule extends javax.swing.JFrame {
             jTable1.getColumnModel().getColumn(1).setResizable(false);
             jTable1.getColumnModel().getColumn(2).setResizable(false);
             jTable1.getColumnModel().getColumn(3).setResizable(false);
+            jTable1.getColumnModel().getColumn(4).setResizable(false);
         }
 
         SButton1.setBackground(new java.awt.Color(204, 204, 204));
@@ -120,11 +131,62 @@ public class ClassSchedule extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+           private void loadStudentSchedule() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // Clear existing data
 
+        try {
+            // 1. Get student's subjects and tutor IDs
+            Map<String, String> subjectTutorMap = new HashMap<>();
+            List<String> enrollLines = Files.readAllLines(Paths.get("student_enroll.txt"));
+            
+            for (int i = 1; i < enrollLines.size(); i++) {
+                String[] parts = enrollLines.get(i).split(",");
+                if (parts.length >= 15 && parts[0].equals(currentUserID)) {
+                    subjectTutorMap.put(parts[9].trim(), parts[10].trim()); // Subject1, Tutor1
+                    subjectTutorMap.put(parts[12].trim(), parts[13].trim()); // Subject2, Tutor2
+                    subjectTutorMap.put(parts[14].trim(), parts[15].trim()); // Subject3, Tutor3
+                    break;
+                }
+            }
+
+            // 2. Get matching classes from classinfo.txt
+            List<String> classLines = Files.readAllLines(Paths.get("classinfo.txt"));
+            for (int i = 1; i < classLines.size(); i++) {
+                String[] parts = classLines.get(i).split(",");
+                if (parts.length >= 8) {
+                    String subject = parts[1].trim();
+                    String tutorID = parts[7].trim();
+                    
+                    if (subjectTutorMap.containsKey(subject) && 
+                        subjectTutorMap.get(subject).equals(tutorID)) {
+                        
+                        // Add to table
+                        model.addRow(new Object[]{
+                            subject,
+                            parts[2].trim(), // Course Date
+                            parts[3].trim(), // Course Time
+                            parts[4].trim(), // Location
+                            parts[6].trim()  // Tutor Name
+                        });
+                    }
+                }
+            }
+
+            if (model.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "No classes found for this student", 
+                    "Information", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error loading schedule data: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     private void SButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SButton1ActionPerformed
     java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StudentDashboard(userID).setVisible(true);
+                new Dashboard().setVisible(true);
             }
         });
     this.dispose();
@@ -133,35 +195,35 @@ public class ClassSchedule extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(() -> {
-//            new ClassSchedule().setVisible(true);
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ClassSchedule.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new ClassSchedule().setVisible(true);
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton SButton1;

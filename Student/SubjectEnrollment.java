@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Student;
+package StudentGUI;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JOptionPane;
@@ -14,13 +16,12 @@ import javax.swing.JOptionPane;
  * @author Sam JunYi
  */
 public class SubjectEnrollment extends javax.swing.JFrame {
-    private String userID;
+
     /**
      * Creates new form SubjectEnrollment
      */
-    public SubjectEnrollment(String userID) {
+    public SubjectEnrollment() {
         initComponents();
-        this.userID = userID;
     }
 
     /**
@@ -34,8 +35,6 @@ public class SubjectEnrollment extends javax.swing.JFrame {
 
         javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         javax.swing.JLabel jLabel1 = new javax.swing.JLabel();
-        javax.swing.JLabel jLabel2 = new javax.swing.JLabel();
-        SName = new javax.swing.JTextField();
         javax.swing.JLabel jLabel3 = new javax.swing.JLabel();
         SOldSubject = new javax.swing.JTextField();
         SNewSubject = new javax.swing.JTextField();
@@ -51,16 +50,6 @@ public class SubjectEnrollment extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Subject Enrollment");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Name:");
-
-        SName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SNameActionPerformed(evt);
-            }
-        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -117,18 +106,7 @@ public class SubjectEnrollment extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(3, 3, 3)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(SOldSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(SName, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(SNewSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(161, 161, 161)
                         .addComponent(SBack))
@@ -136,7 +114,16 @@ public class SubjectEnrollment extends javax.swing.JFrame {
                         .addGap(126, 126, 126)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(SStatus)
-                            .addComponent(SRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(SRequest, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(SOldSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(SNewSubject, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -144,15 +131,11 @@ public class SubjectEnrollment extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(SOldSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SNewSubject, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
@@ -179,10 +162,6 @@ public class SubjectEnrollment extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void SNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_SNameActionPerformed
-
     private void SOldSubjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SOldSubjectActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SOldSubjectActionPerformed
@@ -192,48 +171,54 @@ public class SubjectEnrollment extends javax.swing.JFrame {
     }//GEN-LAST:event_SNewSubjectActionPerformed
 
     private void SRequestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SRequestActionPerformed
-        String Name = SName.getText();
-        String OldSubject = SOldSubject.getText();
-        String NewSubject = SNewSubject.getText();
-        
-        if(Name.isEmpty()||OldSubject.isEmpty()||NewSubject.isEmpty()){
-            JOptionPane.showMessageDialog(this,
-                "Please enter all fields",
-                "Try again",
-                JOptionPane.ERROR_MESSAGE);
-        }else{
-            try {
-                String data= Name + "," + OldSubject + "," + NewSubject +",Pending";
-                
-                FileWriter fw = new FileWriter("SER.txt",true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                bw.write(data);
-                bw.newLine();
-                bw.close();
-                
-                JOptionPane.showMessageDialog(this,
-                        "Request submitted successfully!",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-                
-                SName.setText("");
-                SOldSubject.setText("");
-                SNewSubject.setText("");
-                
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this,
-                        "Error saving data",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            
+    String userID = "S0001"; // Replace with actual user ID retrieval
+    String oldSub = SOldSubject.getText();
+    String newSub = SNewSubject.getText();
+    
+    if(oldSub.isEmpty() || newSub.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter both subjects", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    try {
+        // Get name from enrollment file
+        String name = null;
+        BufferedReader br1 = new BufferedReader(new FileReader("student_enroll.txt"));
+        br1.readLine(); // Skip header
+        String line;
+        while ((line = br1.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts[0].trim().equals(userID)) {
+                name = parts[1].trim();
+                break;
             }
         }
+        br1.close();
+        
+        if (name == null) {
+            JOptionPane.showMessageDialog(this, "Student not found", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Save request
+        BufferedWriter bw = new BufferedWriter(new FileWriter("SER.txt", true));
+        bw.write(name + "," + oldSub + "," + newSub + ",Pending");
+        bw.newLine();
+        bw.close();
+        
+        JOptionPane.showMessageDialog(this, "Request submitted!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        SOldSubject.setText("");
+        SNewSubject.setText("");
+        
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_SRequestActionPerformed
 
     private void SStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SStatusActionPerformed
     java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RequestStatus(userID).setVisible(true);
+                new RequestStatus().setVisible(true);
             }
         });
     dispose();
@@ -242,7 +227,7 @@ public class SubjectEnrollment extends javax.swing.JFrame {
     private void SBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SBackActionPerformed
     java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new StudentDashboard(userID).setVisible(true);
+                new Dashboard().setVisible(true);
             }
         });
     this.dispose();        // TODO add your handling code here:
@@ -251,41 +236,40 @@ public class SubjectEnrollment extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        /* Set the Nimbus look and feel */
-//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-//         */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        //</editor-fold>
-//
-//        /* Create and display the form */
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new SubjectEnrollment().setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(SubjectEnrollment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new SubjectEnrollment().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton SBack;
-    private javax.swing.JTextField SName;
     private javax.swing.JTextField SNewSubject;
     private javax.swing.JTextField SOldSubject;
     private javax.swing.JButton SRequest;
